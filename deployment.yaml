@@ -107,6 +107,7 @@ spec:
       containers:
         - name: notejam
           image: maryna334/pipeline:latest
+          imagePullPolicy: Always
           args:
             - bash
             - -c
