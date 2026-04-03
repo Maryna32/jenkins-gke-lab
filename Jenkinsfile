@@ -15,7 +15,7 @@ agent any
     	stage('Build image') {
    	 	steps {
    		 	script {
-   			 	app = docker.build("maryna334/pipeline:${env.BUILD_ID}")
+   			 	app = docker.build("maryna334/pipeline:latest")
    		  	}
    						 	 
    	 	}
