@@ -5,6 +5,7 @@ agent any
             	CLUSTER_NAME = 'cluster-1'
             	LOCATION = 'us-central1-a'
             	CREDENTIALS_ID = 'gcp-key'
+                DOCKER_CREDS = 'docker-hub-key'
     }
     stages {
     	stage('Checkout') {
@@ -12,14 +13,18 @@ agent any
    		 	checkout scm
    	 	}
     	}
-    	stage('Build image') {
-   	 	steps {
-   		 	script {
-   			 	app = docker.build("maryna334/pipeline:latest")
-   		  	}
-   						 	 
-   	 	}
-    	}
+    	stage('Build & Push image') {
+            steps {
+                script {
+                    def imageTag = "v${env.BUILD_NUMBER}"
+                    docker.withRegistry('', DOCKER_CREDS) {
+                        app = docker.build("maryna334/pipeline:${imageTag}")
+                        app.push()
+                        app.push("latest")
+                    }
+                }
+            }
+        }
        	stage('Deploy to K8s') {
             steps {
                 echo "Deployment started ..."
